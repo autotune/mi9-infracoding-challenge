@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Pranav Raja">
+  <title>MI9 InfraCoding Challenge</title>
+
+  <style type="text/css">
+    @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf) format('truetype');
+    }
+    body {
+        font-family: 'Open Sans', sans-serif;
+    }
+    article {
+        max-width: 960px;
+        margin:0 auto;
+        line-height: 150%;
+    }
+    h1, h2, h3 {
+        color: #333;
+    }
+    li {
+        margin: 0.5em 0;
+    }
+    dt {
+      font-weight: bold;
+    }
+
+    @media screen and (min-width: 500px) {
+        body {
+            font-size: 1.5rem;
+        }
+    }
+
+    #errors {
+      color: red;
+    }
+
+    #errors ul::before {
+      margin-left: -1em;
+      content: 'Some errors were encountered while running the tests. See below:';
+    }
+
+    #success {
+      display: none;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+<article>
+  <header>
+    <h1>InfraCoding Challenge</h1>
+  </header>
+  <section>
+    <p>Welcome to the Mi9 InfraCoding Challenge! To complete this challenge, you'll need to build and deploy a HTTP load balancer, and provide us the URL. To submit your solution, you'll need a browser with Javascript enabled.</p>
+    <p>You should be able to complete this challenge in less than an hour, and using only free resources [there are some <a href="#useful-links">useful links</a> provided at the bottom of the page]. If you have experience with this type of task, it can take as little as 15 minutes.</p>
+  </section>
+  <section>
+    <h3>The Challenge</h3>
+    <p>It's pretty simple. We've got 2 HTTP endpoints <a href="http://localhost:8081">node1</a> &amp; <a href="http://localhost:8082">node2</a> and we need you to distribute HTTP traffic between them.</p>
+    <p>At Mi9, being able to quickly redeploy a solution is often more important than getting it right first time. Any final solutions should focus on quick deployment/recovery time than a specially crafted soluion.</p>
+    <h3>Details</h3>
+    <p>We're going to be sending 10's of requests to your load balancer</p>
+    <p>We're expecting the load to be reasonably distrubted, but not perfectly even.</p>
+    <p>All requests must go through to the backend nodes (no caching)</p>
+    <p>All response data must come back through to client (no modification)</p>
+    <h3>Error Handling</h3>
+    <p>The backend nodes are unreliable and may occasionally stop working.</p>
+    <p>If a backend node returns a <code>HTTP 503</code> or takes longer than 1 second to respond you must not send any more traffic to that node.</p>
+    <p>If no backend nodes are available, you must return a <code>HTTP 503</code> with a JSON response <code>{ 'error': 'no backend nodes available'}</code> </p>
+    <h3>Results</h3>
+    <p>You can submit multiple times. If the URL doesn't behave as we expect, we'll return the errors and give you a chance to fix it. Once you pass the tests, we'll be notified with your email address and get in touch with you.</p>
+  </section>
+  <section>
+    <form id="submission" class="pure-form pure-form-stacked">
+      <fieldset>
+        <legend>Submit your solution</legend>
+        <div id="errors"></div>
+        <div id="success">Congratulations! All the tests passed. We'll contact you soon.</div>
+        <div class="pure-control-group">
+            <label for="name">Full name</label>
+            <input id="name" type="text" class="pure-input-2-3" placeholder="Alice Bob" required="required">
+        </div>
+        <div class="pure-control-group">
+            <label for="email">Email address</label>
+            <input id="email" type="email" class="pure-input-2-3" placeholder="email@server.com" required="required">
+        </div>
+        <div class="pure-control-group">
+            <label for="url">URL</label>
+            <input id="url" type="url" class="pure-input-2-3" placeholder="http://awesomeservice.com/" required="required">
+        </div>
+        <div>
+            <button id="submit" type="submit" class="pure-button pure-button-primary">Submit</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+  <section>
+    <h3>FAQ</h3>
+    <dl>
+      <dt>But.. what programming language should I use?</dt>
+      <dd>Many of us like <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">node.js</a> or <a href="http://www.aaronstannard.com/post/2011/01/14/Getting-Started-with-AppHarbor-e28093-Heroku-for-NET.aspx">C#.NET</a>. If those are too easy for you, take your pick from <a href="http://en.wikipedia.org/wiki/List_of_programming_languages">Wikipedia</a>. Note that we'll probably ask you to send through the code afterwards, see below.</dd>
+      <dt>Do I need to send through the source code?</dt>
+      <dd>If you passed, we'll probably get in touch with you to share the source code with us. Please <a href="http://blog.nodejitsu.com/how-to-write-a-readme/">include a README</a> with setup instructions, and try not to hack the codebase more than necessary =]</dd>
+      <dt>I didn't get automatically emailed when I passed. What's up?</dt>
+      <dd>When you pass, we get emailed with your details so a real human can get in touch with you. Give us a bit of time, you should get an email from one of us soon.</dd>
+      <dt>How was this app built?</dt>
+      <dd><a href="how.html">Glad you asked.</a></dd>
+    </dl>
+  </section>
+  <section>
+    <h3><a name="useful-links">Useful links</a></h3>
+    <ul>
+      <li><a href="https://www.heroku.com/">Heroku</a> - A platform-as-a-service designed for developers, free for small apps.</li>
+      <li><a href="https://bitbucket.org/">Bitbucket</a> - Source code hosting, with free private repositories for small teams.</li>
+    </ul>
+  </section>
+</article>
+
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+<script>
+  document.getElementById('submission').addEventListener('submit', function (event) {
+    event.preventDefault();
+    document.getElementById('success').style.display = '';
+    document.getElementById('errors').innerHTML = '';
+    document.getElementById('submit').disabled = 'disabled';
+    var request = new XMLHttpRequest();
+    request.open('PUT', '/candidates', true);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.setRequestHeader('Accept', 'application/json');
+    request.onerror = function () {
+      document.getElementById('submit').disabled = '';
+    };
+    request.onload = function () {
+      document.getElementById('submit').disabled = '';
+      var data = JSON.parse(this.response);
+      if (this.status != 202) {
+        if (data.errors) {
+          document.getElementById('errors').innerHTML = '<ul>' + data.errors.map(function (err) {
+            return '<li>' + err + '</li>';
+          }).join('') + '</ul>';
+        }
+      } else {
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('name').disabled = 'disabled';
+        document.getElementById('email').disabled = 'disabled';
+        document.getElementById('url').disabled = 'disabled';
+        document.getElementById('submit').disabled = 'disabled';
+      }
+    };
+    request.send('email=' + document.getElementById('email').value + '&url=' + document.getElementById('url').value) + '&name=' + encodeURIComponent(document.getElementById('name').value);
+    return false;
+  });
+</script>
+<script>
+  // TODO: Google Analytics
+</script>
+</body>
+</html>

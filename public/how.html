@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Pranav Raja">
+  <title>MI9 Coding Challenge - Behind the Scenes</title>
+
+  <style type="text/css">
+    @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf) format('truetype');
+    }
+    body {
+        font-family: 'Open Sans', sans-serif;
+    }
+    article {
+        max-width: 960px;
+        margin:0 auto;
+        line-height: 150%;
+    }
+    h1, h2, h3 {
+        color: #333;
+    }
+    li {
+        margin: 0.5em 0;
+    }
+    dt {
+      font-weight: bold;
+    }
+
+    @media screen and (min-width: 500px) {
+        body {
+            font-size: 1.5rem;
+        }
+    }
+
+    #errors {
+      color: red;
+    }
+
+    #errors ul::before {
+      margin-left: -1em;
+      content: 'Some errors were encountered while running the tests. See below:';
+    }
+
+    #success {
+      display: none;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+<article>
+  <header>
+    <h1>InfraCoding Challenge - Behind the Scenes</h1>
+  </header>
+  <section>
+    <p>The challenge is a simple <a href="http://golang.org/">Go</a> app using <a href="http://martini.codegangsta.io/">martini</a>, deployed on <a href="https://www.heroku.com/">Heroku</a> using <a href="https://github.com/kr">kr</a>'s <a href="https://github.com/kr/heroku-buildpack-go">Go buildpack</a>.</p>
+    <p>We use the <a href="https://addons.heroku.com/mandrill">Mandrill</a> addon to provide the SMTP server, and the <a href="https://addons.heroku.com/heroku-postgresql">Postgres</a> addon for our database.</p>
+    <p>The frontend is HTML and Javascript, using <a href="http://purecss.io/">Pure</a> and a bit of CSS for layout. The frontend uses a simple JSON API to send requests to the server for validation.</p>
+  </section>
+  <section>
+    <h3>API</h3>
+    <p>The client sends <code>PUT /candidates/</code> with the URL to verify and the details.</p>
+    <ul>
+      <li>If the URL passes the tests, the server creates (or updates) the candidate's record in the database, returns <code>202 Accepted</code> and send an email to us with the candidate's details.</li>
+      <li>If the URL fails the tests, the server returns <code>502 Bad Gateway</code> (the candidate's web service under test is kinda like a gateway), with a list of errors.</li>
+    </ul>
+    <p>We try to provide all the errors at once rather than just the first, to make it easier to fix everything before resubmitting.</p>
+  </section>
+  <section>
+    <h3>Credits</h3>
+    <p><a href="https://github.com/pranavraja/">@pranavraja</a></p>
+    <p><a href="https://github.com/preflightsiren/">@sebastianparis</a></p>
+  </section>
+</article>
+
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+<script>
+  // TODO: Google Analytics
+</script>
+</body>
+</html>
