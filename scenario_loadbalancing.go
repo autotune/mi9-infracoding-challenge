@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bytes"
+	//"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,36 +12,38 @@ func init() {
 }
 
 func RunValidScenario(url, email string, nodes []Node, client *http.Client) (errors []error) {
-	var buf bytes.Buffer
-	resp, err := client.Post(url, "application/json", &buf)
-	if err != nil {
-		errors = append(errors, err)
-		return
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
-		errors = append(errors, fmt.Errorf("Expected status code 200 when posting valid json, but got %d", resp.StatusCode))
-	}
+	/*  - Generate a bunch of requests
+	*   - Interpret the requests, pulling out the node id
+	*   - Count the number of requests per id
+	*		- Find the ratio of responses
+	 */
+	var loadBlancingResults = map[string]int{}
 	var validRequestResponse validResponse
-	err = json.NewDecoder(resp.Body).Decode(&validRequestResponse)
-	if err != nil {
-		errors = append(errors, fmt.Errorf("Cannot parse json: %s", err))
+
+	for _, node := range nodes {
+		loadBlancingResults[node.Port] = 0
 	}
-	if items := len(validRequestResponse.Response); items != 7 {
-		errors = append(errors, fmt.Errorf("Expected %d elements but there were %d", 7, items))
-		return
-	}
-	tests := []struct {
-		expected   interface{}
-		actual     interface{}
-		messageFmt string
-	}{
-		{"16 Kids and Counting", validRequestResponse.Response[0].Title, "Expected the first item to be '%s', but it was '%s'"},
-	}
-	for _, test := range tests {
-		if test.expected != test.actual {
-			errors = append(errors, fmt.Errorf(test.messageFmt, test.expected, test.actual))
+
+	for i := 0; i < 100; i++ {
+		resp, err := client.Get(url)
+		if err != nil {
+			errors = append(errors, err)
+			return
 		}
+		//defer resp.Body.Close()
+		if resp.StatusCode != 200 {
+			errors = append(errors, fmt.Errorf("Expected status code 200, but got %d", resp.StatusCode))
+		}
+
+		err = json.NewDecoder(resp.Body).Decode(&validRequestResponse)
+		if err != nil {
+			errors = append(errors, fmt.Errorf("Cannot parse json: %s", err))
+		}
+		loadBlancingResults[validRequestResponse.Id] = loadBlancingResults[validRequestResponse.Id] + 1
+		resp.Body.Close()
+	}
+	if loadBlancingResults[nodes[0].Port] != loadBlancingResults[nodes[1].Port] {
+		errors = append(errors, fmt.Errorf("Load wasn't balanced enough, node0 received %d requests and node1 %d", loadBlancingResults[nodes[0].Port], loadBlancingResults[nodes[1].Port]))
 	}
 	return
 }

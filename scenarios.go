@@ -11,12 +11,8 @@ type errorResponse struct {
 }
 
 type validResponse struct {
-	Candidate string
-	Response  []struct {
-		Image string
-		Title string
-		Slug  string
-	}
+	Id      string
+	Message string
 }
 
 func RunScenarios(url, email string, nodes []Node, client *http.Client) (errors []error) {
