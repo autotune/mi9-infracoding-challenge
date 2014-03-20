@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-var nodes []Node
+var nodes NodeSlice
 
 func errorsAsJson(name, url string, errors []error) string {
 	messages := make([]string, len(errors))
@@ -73,7 +73,7 @@ func init() {
 // and send us an email with the candidate's details.
 //
 func main() {
-	nodes = []Node{{"8080", true}, {"8081", true}}
+	nodes = NodeSlice{{"8080", true}, {"8081", true}}
 	var wg sync.WaitGroup
 	for _, node := range nodes {
 		wg.Add(1)

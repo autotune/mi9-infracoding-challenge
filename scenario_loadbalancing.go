@@ -11,12 +11,13 @@ func init() {
 	scenarios = append(scenarios, RunValidScenario)
 }
 
-func RunValidScenario(url, email string, nodes []Node, client *http.Client) (errors []error) {
+func RunValidScenario(url, email string, nodes NodeSlice, client *http.Client) (errors []error) {
 	/*  - Generate a bunch of requests
 	*   - Interpret the requests, pulling out the node id
 	*   - Count the number of requests per id
 	*		- Find the ratio of responses
 	 */
+	nodes.Enable()
 	var loadBlancingResults = map[string]int{}
 	var validRequestResponse validResponse
 

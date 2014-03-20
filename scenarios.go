@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-var scenarios []func(url, email string, nodes []Node, client *http.Client) []error
+var scenarios []func(url, email string, nodes NodeSlice, client *http.Client) []error
 
 type errorResponse struct {
 	Error string
@@ -15,7 +15,7 @@ type validResponse struct {
 	Message string
 }
 
-func RunScenarios(url, email string, nodes []Node, client *http.Client) (errors []error) {
+func RunScenarios(url, email string, nodes NodeSlice, client *http.Client) (errors []error) {
 	err := RunAvailabilityScenario(url, client)
 	if err != nil {
 		errors = append(errors, err)

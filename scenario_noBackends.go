@@ -11,7 +11,8 @@ func init() {
 	scenarios = append(scenarios, RunBadRequestScenario)
 }
 
-func RunBadRequestScenario(url, email string, nodes []Node, client *http.Client) (errors []error) {
+func RunBadRequestScenario(url, email string, nodes NodeSlice, client *http.Client) (errors []error) {
+	nodes.Disable()
 	resp, err := client.Get(url)
 	if err != nil {
 		errors = append(errors, err)

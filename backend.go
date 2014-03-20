@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+type NodeSlice []Node
+
 type Node struct {
 	Port      string
 	Available bool
@@ -17,4 +19,18 @@ func (n *Node) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "{ \"id\": \"%s\",\"status\": \"offline\"}", 500)
 	}
+}
+
+func (nodes NodeSlice) Enable() {
+	for _, node := range nodes {
+		node.Available = true
+	}
+	fmt.Println("Enabling Nodes")
+}
+
+func (nodes NodeSlice) Disable() {
+	for _, node := range nodes {
+		node.Available = true
+	}
+	fmt.Println("Disabling Nodes")
 }
