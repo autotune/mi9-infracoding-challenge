@@ -41,7 +41,11 @@ func mainHandler(r *http.Request, params martini.Params) (responseCode int, body
 	if url == "" || email == "" {
 		return 400, `{ "error": "'url' and 'email' must be provided" }`
 	}
-	return 501, `{ "error": "not implemented"}`
+	errors := RunScenarios(url, email)
+	if errors != nil {
+		return 502, errorsAsJson(errors)
+	}
+	return 202, `{ "success": true }`
 }
 
 func main() {
