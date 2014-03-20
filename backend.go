@@ -11,6 +11,7 @@ type Node struct {
 }
 
 func (n *Node) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	if n.Available {
 		fmt.Fprintf(w, "{ \"id\": \"%s\",\"Message\": \"%s\" }", n.Port, r.URL.Path[1:])
 	} else {
