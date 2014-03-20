@@ -1,24 +1,10 @@
 package main
 
 import (
-	"net"
 	"net/http"
-	"time"
 )
 
-var scenarios []func(url, email string) []error
-
-func dialTimeout(network, addr string) (net.Conn, error) {
-	return net.DialTimeout(network, addr, 2*time.Second)
-}
-
-func init() {
-	// Ensure that the upstream service isn't too slow
-	http.DefaultTransport = &http.Transport{
-		ResponseHeaderTimeout: 3 * time.Second,
-		Dial: dialTimeout,
-	}
-}
+var scenarios []func(url, email string, nodes []Node, client *http.Client) []error
 
 type errorResponse struct {
 	Error string
@@ -33,14 +19,14 @@ type validResponse struct {
 	}
 }
 
-func RunScenarios(url, email string) (errors []error) {
-	err := RunAvailabilityScenario(url)
+func RunScenarios(url, email string, nodes []Node, client *http.Client) (errors []error) {
+	err := RunAvailabilityScenario(url, client)
 	if err != nil {
 		errors = append(errors, err)
 		return
 	}
 	for _, scenario := range scenarios {
-		errs := scenario(url, email)
+		errs := scenario(url, email, nodes, client)
 		if errs != nil {
 			errors = append(errors, errs...)
 		}
@@ -48,8 +34,8 @@ func RunScenarios(url, email string) (errors []error) {
 	return
 }
 
-func RunAvailabilityScenario(url string) error {
-	resp, err := http.Post(url, "application/json", nil)
+func RunAvailabilityScenario(url string, client *http.Client) error {
+	resp, err := client.Post(url, "application/json", nil)
 	if err != nil {
 		return err
 	}

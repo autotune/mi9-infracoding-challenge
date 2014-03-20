@@ -156,7 +156,7 @@
         document.getElementById('submit').disabled = 'disabled';
       }
     };
-    request.send('email=' + document.getElementById('email').value + '&url=' + document.getElementById('url').value) + '&name=' + encodeURIComponent(document.getElementById('name').value);
+    request.send('email=' + document.getElementById('email').value + '&url=' + document.getElementById('url').value + '&name=' + encodeURIComponent(document.getElementById('name').value));
     return false;
   });
 </script>
