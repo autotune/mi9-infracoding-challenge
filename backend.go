@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type NodeSlice []Node
+type NodeSlice []*Node
 
 type Node struct {
 	Port      string
@@ -30,7 +30,7 @@ func (nodes NodeSlice) Enable() {
 
 func (nodes NodeSlice) Disable() {
 	for _, node := range nodes {
-		node.Available = true
+		node.Available = false
 	}
 	fmt.Println("Disabling Nodes")
 }

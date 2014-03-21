@@ -32,6 +32,7 @@ func mainHandler(r *http.Request, params martini.Params) (responseCode int, body
 	}
 	client := httpClient(r)
 	errors := RunScenarios(url, email, nodes, client)
+	nodes.Enable()
 	if errors != nil {
 		SendFailure(name, email, url)
 		return 502, errorsAsJson(name, url, errors)
@@ -73,12 +74,12 @@ func init() {
 // and send us an email with the candidate's details.
 //
 func main() {
-	nodes = NodeSlice{{"8080", true}, {"8081", true}}
+	nodes = NodeSlice{&Node{"8080", true}, &Node{"8081", true}}
 	var wg sync.WaitGroup
 	for _, node := range nodes {
 		wg.Add(1)
-		go func(n Node) {
-			http.ListenAndServe(":"+n.Port, &n)
+		go func(n *Node) {
+			http.ListenAndServe(":"+n.Port, n)
 			wg.Done()
 		}(node)
 	}
