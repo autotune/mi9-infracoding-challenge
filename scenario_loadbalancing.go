@@ -1,10 +1,10 @@
 package main
 
 import (
-	//"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func init() {
@@ -18,6 +18,7 @@ func RunValidScenario(url, email string, nodes NodeSlice, client *http.Client) (
 	*		- Find the ratio of responses
 	 */
 	nodes.Enable()
+	time.Sleep(6 * time.Second)
 	var loadBlancingResults = map[string]int{}
 	var validRequestResponse validResponse
 

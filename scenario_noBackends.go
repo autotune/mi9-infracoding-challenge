@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func init() {
@@ -13,6 +14,7 @@ func init() {
 
 func RunBadRequestScenario(url, email string, nodes NodeSlice, client *http.Client) (errors []error) {
 	nodes.Disable()
+	time.Sleep(10 * time.Second)
 	resp, err := client.Get(url)
 	if err != nil {
 		errors = append(errors, err)
@@ -31,7 +33,7 @@ func RunBadRequestScenario(url, email string, nodes NodeSlice, client *http.Clie
 		errors = append(errors, err)
 	}
 	if !strings.Contains(badRequestResponse.Error, "no backend nodes available") {
-		errors = append(errors, fmt.Errorf(`The "error" key in the response didn't contain the string 'no backend nodes available'`))
+		errors = append(errors, fmt.Errorf(`The "error" key in the response didn't contain the string "no backend nodes available"`))
 	}
 	return
 }
